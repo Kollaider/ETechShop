@@ -1,1 +1,1 @@
-# ETechShop
+# ETechShop - Navigating the Digital World of Electronics.
