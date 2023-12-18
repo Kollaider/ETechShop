@@ -75,24 +75,20 @@ WSGI_APPLICATION = 'ETechShop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'HOST': config('POSTGRES_HOST', default='db'),
+        'HOST': config('POSTGRES_HOST', cast=str, default='db'),
         'PORT': config('POSTGRES_PORT', cast=int, default=5432),
         'NAME': config('POSTGRES_DB', cast=str),
         'USER': config('POSTGRES_USER', cast=str),
         'PASSWORD': config('POSTGRES_PASSWORD', cast=str),
     }
 }
+
+CELERY_BROKER_URL = config("CELERY_BROKER", "redis://127.0.0.1:6379/0")
+CELERY_RESULT_BACKEND = config("CELERY_BACKEND", "redis://127.0.0.1:6379/0")
 
 
 # Password validation
