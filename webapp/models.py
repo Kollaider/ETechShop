@@ -120,6 +120,9 @@ class NetworkNode(models.Model):
             if self.network_level <= self.supplier.network_level:
                 raise ValidationError("Network level must be higher than the supplier's network level.")
 
+            if self.debt < 0:
+                raise ValidationError("Debt amount must be a positive number.")
+
     def save(self, *args, **kwargs):
         self.hierarchy_level = self.get_level()
         super().save(*args, **kwargs)

@@ -11,4 +11,3 @@ def create_or_update_employee_profile(sender, instance, created, **kwargs):
         EmployeeProfileInfo.objects.create(user=instance)
     else:
         instance.employeeprofileinfo.save()
-
