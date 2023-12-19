@@ -80,7 +80,8 @@ class NetworkNode(models.Model):
     products = models.ManyToManyField(
         'Product',
         related_name='nodes',
-        help_text="Products associated with the network node"
+        help_text="Products associated with the network node",
+        blank=True,
     )
     debt = models.DecimalField(
         max_digits=10,
@@ -98,6 +99,10 @@ class NetworkNode(models.Model):
         blank=True,
         help_text="Employees associated with the network node"
     )
+    #
+    # @property
+    # def supplier_link(self):
+    #     pass
 
     def __str__(self):
         return f'{self.name} ({self.network_level})'
