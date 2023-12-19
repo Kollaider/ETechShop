@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.utils.safestring import mark_safe
 
-from webapp.models import NetworkNode, EmployeeProfileInfo, Product, ContactInfo, Address
+from webapp.models import NetworkNode, EmployeeProfileInfo, Product, Contact, Address
 from django import forms
 from django.contrib import admin
 from django.urls import reverse
@@ -38,7 +38,7 @@ class NetworkNodeAdmin(admin.ModelAdmin):
     list_filter = ('network_level',)
     search_fields = ('name',)
     readonly_fields = ('hierarchy_level', 'created_at')
-    filter_horizontal = ('contacts', 'products', 'employees',)
+    filter_horizontal = ('products', 'employees',)
 
     fieldsets = (
         (None, {
@@ -48,7 +48,7 @@ class NetworkNodeAdmin(admin.ModelAdmin):
             'fields': ('supplier', 'supplier_link'),
         }),
         ('Other Fields', {
-            'fields': ('contacts', 'products', 'employees'),
+            'fields': ('contact', 'products', 'employees'),
         }),
     )
 
@@ -81,8 +81,10 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = ('country', 'city', 'street', 'house_number')
 
 
-@admin.register(ContactInfo)
-class ContactInfoAdmin(admin.ModelAdmin):
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
     list_display = ('email', 'address')
 
 

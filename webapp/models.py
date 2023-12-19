@@ -71,11 +71,13 @@ class NetworkNode(models.Model):
         on_delete=models.CASCADE,
         help_text="Supplier of the network node"
     )
-    contacts = models.ManyToManyField(
-        'ContactInfo',
-        related_name='network_nodes',
+    contact = models.OneToOneField(
+        'Contact',
+        related_name='network_node',
+        null=True,
         blank=True,
-        help_text="Contact information for the network node"
+        help_text="Contact information for the network node",
+        on_delete=models.CASCADE,
     )
     products = models.ManyToManyField(
         'Product',
@@ -139,7 +141,7 @@ class Address(models.Model):
         return f"{self.country}, {self.city}, {self.street}, {self.house_number}"
 
 
-class ContactInfo(models.Model):
+class Contact(models.Model):
     """
     Model representing contact information.
     """
