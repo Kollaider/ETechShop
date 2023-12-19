@@ -99,10 +99,6 @@ class NetworkNode(models.Model):
         blank=True,
         help_text="Employees associated with the network node"
     )
-    #
-    # @property
-    # def supplier_link(self):
-    #     pass
 
     def __str__(self):
         return f'{self.name} ({self.network_level})'
