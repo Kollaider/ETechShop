@@ -9,36 +9,15 @@ from django.utils.html import format_html
 from .models import NetworkNode
 
 
-
-
-class NetworkNodeForm(forms.ModelForm):
-    class Meta:
-        model = NetworkNode
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Check if there's a supplier
-        if self.instance.supplier:
-            supplier_url = reverse('admin:webapp_networknode_change', args=[self.instance.supplier.id])
-            supplier_link = format_html('<a href="{}">{}</a>', supplier_url, self.instance.supplier.name)
-            self.fields['supplier_link'] = forms.CharField(
-                label='Supplier',
-                initial=supplier_link,
-                disabled=True,
-                required=False
-            )
-
-
 @admin.register(NetworkNode)
 class NetworkNodeAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'network_level', 'hierarchy_level', 'created_at')
-    list_filter = ('network_level',)
+    list_filter = ('network_level', 'contact__address__city')
     search_fields = ('name',)
     readonly_fields = ('hierarchy_level', 'created_at')
     filter_horizontal = ('products', 'employees',)
+
 
     fieldsets = (
         (None, {
