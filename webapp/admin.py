@@ -34,6 +34,12 @@ class NetworkNodeAdmin(admin.ModelAdmin):
         }),
     )
 
+    def get_readonly_fields(self, request, obj=None):
+        fields = super().get_readonly_fields(request, obj)
+        if obj is None:  # Checking if it's an add_view
+            fields += ('supplier_link',)  # Add 'supplier_link' to readonly_fields
+        return fields
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         obj = self.get_object(request, object_id)
         if obj.supplier:
