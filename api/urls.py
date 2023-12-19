@@ -5,7 +5,7 @@ from api.views import NetworkNodeViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r'network_nodes', NetworkNodeViewSet)
+router.register(r'networknodes', NetworkNodeViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

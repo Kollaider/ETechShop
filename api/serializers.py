@@ -40,3 +40,14 @@ class NetworkNodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkNode
         fields = '__all__'
+
+
+class NetworkNodeDebtSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkNode
+        fields = ('id', 'debt', 'name')
+
+
+class DebtStatisticSerializer(serializers.Serializer):
+    average_debt = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    network_nodes = NetworkNodeDebtSerializer(many=True, read_only=True)
