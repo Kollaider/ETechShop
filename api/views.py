@@ -11,7 +11,6 @@ class NetworkNodeViewSet(ReadOnlyModelViewSet):
     queryset = NetworkNode.objects.all()
     serializer_class = NetworkNodeSerializer
     filterset_class = NetworkNodeFilter
-    filter_backends = ['product_id']
     ordering_fields = ['id']
 
     @action(detail=False, methods=['GET'])
