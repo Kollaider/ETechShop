@@ -1,6 +1,8 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from api.filters import NetworkNodeFilter
 from api.permissions import IsActiveEmployeePermission
@@ -9,6 +11,8 @@ from webapp.models import NetworkNode, Product, EmployeeProfileInfo
 from django.db.models import Avg, F
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from webapp.tasks import generate_qr_code_and_send_email
+from webapp.utils import generate_networknode_contact_info
 
 
 class NetworkNodeViewSet(ModelViewSet):
@@ -74,6 +78,20 @@ class NetworkNodeViewSet(ModelViewSet):
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    @action(detail=True, methods=['POST'])
+    def send_netwoknode_info_email(self, request, pk):
+        try:
+            network_node = NetworkNode.objects.get(pk=int(pk))
+            email, network_node_data  = generate_networknode_contact_info(network_node)
+
+            generate_qr_code_and_send_email.delay(email, network_node_data)
+
+            return Response({'message': 'QR code generation and email sending in progress'}, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({'error': 'object with such pk not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
