@@ -1,15 +1,18 @@
 from django.utils.safestring import mark_safe
-
 from webapp.models import NetworkNode, EmployeeProfileInfo, Product, Contact, Address
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 from .models import NetworkNode
+from .tasks import make_debt_zero
 
 
 @admin.action(description='Renewal debts')
 def debt_renewal(modeladmin, request, queryset):
-    queryset.update(debt=0)
+    if queryset.count() > 20:
+        make_debt_zero.delay()
+    else:
+        queryset.update(debt=0)
 
 
 @admin.register(NetworkNode)
@@ -67,8 +70,6 @@ class NetworkNodeAdmin(admin.ModelAdmin):
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
     list_display = ('country', 'city', 'street', 'house_number')
-
-
 
 
 @admin.register(Contact)
