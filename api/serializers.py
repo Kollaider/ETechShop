@@ -1,13 +1,25 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from webapp.models import NetworkNode, Contact, Address, EmployeeProfileInfo, Product
-
 
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+
+    def validate(self, data):
+        name = data.get('name')
+        release_date = data.get('release_date')
+
+        if len(name) > 25:
+            raise serializers.ValidationError("Product name should not be longer than 25 characters.")
+
+        if release_date and release_date > timezone.now().date():
+            raise serializers.ValidationError("Product release date cannot be in the future.")
+
+        return data
 
 
 class EmployeeProfileInfoSerializer(serializers.ModelSerializer):
@@ -61,6 +73,10 @@ class NetworkNodeSerializer(serializers.ModelSerializer):
 
         if instance and supplier.id == instance.id:
             raise serializers.ValidationError("Recursive supplier-child relationship is not allowed.")
+
+        name = data.get('name')
+        if len(name) > 50:
+            raise serializers.ValidationError("Network node name should not be longer than 50 characters.")
 
         return data
 
