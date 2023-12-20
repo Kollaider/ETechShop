@@ -22,6 +22,11 @@ class NetworkNodeViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsActiveEmployeePermission]
     ordering_fields = ['id']
 
+    def get_queryset(self):
+        user = self.request.user
+        queryset = self.queryset.filter(employees__user=user)
+        return queryset
+
     @action(detail=False, methods=['GET'])
     def debt_statistics(self, request):
         average_debt = NetworkNode.objects.aggregate(average_debt=Avg('debt'))['average_debt']

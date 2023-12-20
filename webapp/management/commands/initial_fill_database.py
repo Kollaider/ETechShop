@@ -71,12 +71,12 @@ def get_fake_products(fake, count=5):
 
 def get_fake_employees(fake, count=5):
     employees = []
-
+    username, email, password = fake.user_name(), fake.email(), fake.password(),
     for _ in range(count):
         user = User.objects.create_user(
-            username=fake.user_name(),
-            email=fake.email(),
-            password=fake.password(),
+            username=username,
+            email=email,
+            password=password,
             first_name=fake.first_name(),
             last_name=fake.last_name(),
         )
@@ -86,6 +86,9 @@ def get_fake_employees(fake, count=5):
         employee.position = fake.random_element(elements=EmployeeProfileInfo.Position.values)
         employee.save()
         employees.append(employee)
+
+        with open('user_creds.txt', 'a') as file:
+            file.write(' '.join([username, email, password]) + '\n')
 
     return employees
 
