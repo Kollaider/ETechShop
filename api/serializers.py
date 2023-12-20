@@ -33,13 +33,36 @@ class ContactSerializer(serializers.ModelSerializer):
 
 
 class NetworkNodeSerializer(serializers.ModelSerializer):
-    contact = ContactSerializer()
-    employees = EmployeeProfileInfoSerializer(many=True)
-    products = ProductSerializer(many=True)
+    contact = ContactSerializer(read_only=True)
+    employees = EmployeeProfileInfoSerializer(many=True, read_only=True)
+    products = ProductSerializer(many=True, read_only=True)
 
     class Meta:
         model = NetworkNode
         fields = '__all__'
+        read_only_fields = ['hierarchy_level']
+
+    def validate(self, data):
+        supplier = data.get('supplier')
+        network_level = data.get('network_level')
+        debt = data.get('debt')
+        instance = self.instance
+
+        if supplier and network_level <= supplier.network_level:
+            raise serializers.ValidationError("Network level must be higher than the supplier's network level.")
+
+        if debt < 0:
+            raise serializers.ValidationError("Debt amount must be a positive number.")
+
+        if instance is None and debt is None:
+            return data
+        elif instance and debt is not None and instance.debt != debt:
+            raise serializers.ValidationError("Changing the debt field during an update is not allowed.")
+
+        if instance and supplier.id == instance.id:
+            raise serializers.ValidationError("Recursive supplier-child relationship is not allowed.")
+
+        return data
 
 
 class NetworkNodeDebtSerializer(serializers.ModelSerializer):

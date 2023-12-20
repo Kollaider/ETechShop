@@ -2,11 +2,12 @@ from django.urls import include, path
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 
-from api.views import NetworkNodeViewSet
+from api.views import NetworkNodeViewSet, ProductViewSet
 
 
 router = routers.DefaultRouter()
 router.register(r'networknodes', NetworkNodeViewSet)
+router.register(r'products', ProductViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
