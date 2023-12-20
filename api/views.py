@@ -24,8 +24,9 @@ class NetworkNodeViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = self.queryset.filter(employees__user=user)
-        return queryset
+        if user.is_anonymous:                   # need for swagger without login
+            return self.queryset
+        return self.queryset.filter(employees__user=user)
 
     @action(detail=False, methods=['GET'])
     def debt_statistics(self, request):
