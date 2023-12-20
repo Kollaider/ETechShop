@@ -18,6 +18,8 @@ def debt_renewal(modeladmin, request, queryset):
 @admin.register(NetworkNode)
 class NetworkNodeAdmin(admin.ModelAdmin):
 
+    change_form_template = 'admin/webapp/networknode/change_form.html'
+
     list_display = ('name', 'network_level', 'supplier', 'debt', 'hierarchy_level', 'created_at')
     list_filter = ('network_level', 'contact__address__city')
     search_fields = ('name',)
