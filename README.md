@@ -1,4 +1,4 @@
-`# ETechShop - Navigating the Digital World of Electronics.
+# ETechShop - Navigating the Digital World of Electronics.
 
 ETechShop is a web application that allows users to explore the digital world of electronics. This README provides information on deploying the application and using some key features.
 
